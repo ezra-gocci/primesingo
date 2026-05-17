@@ -12,5 +12,4 @@
 //
 // For very large N, prefer streaming approaches over materializing the full
 // list — the result slice itself becomes the dominant memory cost.
-
 package primesingo
