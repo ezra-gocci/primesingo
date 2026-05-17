@@ -1,0 +1,21 @@
+# Binaries
+/primes
+*.exe
+*.dll
+
+# Test artifacts
+*.test
+*.out
+coverage.html
+coverage.out
+
+# Editor
+.vscode/
+.idea/
+*.swp
+.DS_Store
+
+# Go workspace
+/vendor/
+go.work
+go.work.sum
