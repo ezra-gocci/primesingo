@@ -188,3 +188,40 @@ name (declared in `.go` files) is independent — callers reference the
 package by its declared name, not the URL. Repo names can have hyphens
 or underscores; Go package names should be short, lowercase, and
 without underscores.
+
+### Go: Benchmarking
+
+**Q: What's the difference between `-run` and `-bench` when running tests?**
+
+A: `-run` selects which `TestXxx` and `ExampleXxx` functions to execute.
+`-bench` selects which `BenchmarkXxx` functions to execute. By default
+`go test` runs all tests and no benchmarks; adding `-bench=Foo` enables
+benchmarks but still runs tests too. To run *only* benchmarks, combine
+with `-run='^$'` (a regex matching no test names).
+
+**Q: Why does `b.N` exist instead of a time budget?**
+
+A: `b.N` is the framework's chosen iteration count. The runner starts
+small, measures per-iteration cost, then scales up to make the total
+runtime statistically meaningful (~1 second by default). Reporting
+nanoseconds-per-operation (ns/op) instead of total time lets you
+compare benchmarks across machines, scales, and codebases — totals
+depend on b.N, but ns/op is normalized.
+
+**Q: What does benchstat tell me that comparing raw ns/op doesn't?**
+
+A: Whether the difference is statistically significant. A 5% speedup
+from one measurement might be noise; benchstat runs a t-test across
+multiple samples (use `-count=10` on the benchmark) and reports a
+p-value. Without enough samples benchstat refuses to claim significance,
+even if the means differ. Always run benchmarks with `-count=10` or
+more for results you'd publish or rely on.
+
+**Q: Why pre-allocate the result slice using π(N) ≈ N/ln(N)?**
+
+A: Without a capacity, `append` doubles its backing array each time it
+fills up — for N=10⁶ that's ~17 reallocations and ~78k cumulative
+element copies. Pre-sizing with `make([]uint64, 0, estimate)` lets
+append write directly into existing memory. Measured impact: -85% on
+allocations, -42% on memory, -7% on time. Allocations dropped from
+logarithmic growth in N to roughly constant.
