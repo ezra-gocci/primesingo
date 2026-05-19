@@ -1,0 +1,10 @@
+goos: darwin
+goarch: arm64
+pkg: github.com/ezra-gocci/primesingo
+cpu: Apple M1
+BenchmarkSieve/N=1000-8         	  927207	      1260 ns/op	    2432 B/op	       2 allocs/op
+BenchmarkSieve/N=10000-8        	   94149	     12873 ns/op	   34304 B/op	       3 allocs/op
+BenchmarkSieve/N=100000-8       	    6360	    181741 ns/op	  286720 B/op	       3 allocs/op
+BenchmarkSieve/N=1000000-8      	     571	   1825458 ns/op	 1646594 B/op	       2 allocs/op
+PASS
+ok  	github.com/ezra-gocci/primesingo	5.783s
